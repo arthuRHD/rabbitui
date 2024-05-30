@@ -13,6 +13,7 @@ use views::{exchange::ExchangePane, overview::OverviewPane, queues::QueuesPane, 
 
 use std::{
     error::Error,
+    env,
     io,
     io::Stdout,
     sync::{mpsc, Arc},
@@ -35,6 +36,7 @@ use tui::{
     widgets::{Block, Borders, Paragraph, TableState, Tabs, Wrap},
     Frame, Terminal,
 };
+
 
 const DEFAULT_USER: &str = "guest";
 const DEFAULT_PASS: &str = "guest";
@@ -379,7 +381,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 .short('u')
                 .long("user")
                 .required(false)
-                .default_value(DEFAULT_USER),
+                .default_value(&env::var("RABBITUI_USER").unwrap_or_else(|_| DEFAULT_USER.to_string())),
         )
         .arg(
             Arg::new("pass")
@@ -388,7 +390,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 .short('p')
                 .long("pass")
                 .required(false)
-                .default_value(DEFAULT_PASS),
+                .default_value(&env::var("RABBITUI_PASS").unwrap_or_else(|_| DEFAULT_PASS.to_string())),
         )
         .arg(
             Arg::new("addr")
@@ -397,7 +399,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 .short('a')
                 .long("addr")
                 .required(false)
-                .default_value(DEFAULT_ADDR),
+                .default_value(&env::var("RABBITUI_ADDR").unwrap_or_else(|_| DEFAULT_ADDR.to_string())),
         )
         .get_matches();
 
